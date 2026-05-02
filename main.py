@@ -1,24 +1,28 @@
 from google import genai # pip install google-genai
+from rules import rules_list
 
-client = genai.Client(api_key="AIzaSyC_laWNtFHjahkANIMfgzSBuz4M0d06dVw")
+
+client = genai.Client(api_key="AIzaSyAeOJBxdhbhEVgkDPe0V_kv2XdmY6jZm6o")
 
 print(" - Асистента запущено! -")
-user_prompt = input("\n> ")
 
-response = client.models.generate_content(
-    model="gemini-3-flash-preview",
-    contents=user_prompt,
-)
+while True:
+    user_prompt = input("\n> ")
 
-print("\n", response.text)
+    if user_prompt in ["exit", "quit", "stop"]:
+        break
 
+    prompt = (f"Виконай запит користувача: {user_prompt}\n"
+              "Обов'язково виконуй наступні правила:\n"
+              "\n".join(rules_list))
 
-'''
-    Зробити так, щоб при запуску програми користувач міг ввести власний
-    запит до штучного інтелекту. Програма має вивести відповідь на запит
-    користувача.
-    
-    Використати команду input() та змінні.
-    
-    Зробити так, щоб можна було вводити декілька запитів, не перезапускаючи код.
-'''
+    # Доступні моделі:
+    # gemini-3-flash-preview
+    # gemini-2.5-flash
+
+    response = client.models.generate_content(
+        model="gemini-3-flash-preview",
+        contents=prompt,
+    )
+
+    print("\n", response.text)
